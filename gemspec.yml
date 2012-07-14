@@ -1,5 +1,5 @@
 name: flv-dl
-version: 0.1.0
+version: 0.1.1
 summary: Downloads Flash Video (flv) files from web-pages.
 description:
   Downloads or plays Flash Video (flv) files directly from web-pages.
