@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+
+require 'net/http'
+require 'optparse'
+require 'pp'
+
+require 'flv/video'
+
+options = {
+  :mode   => :play,
+  :player => ENV['VIDEO_PLAYER'],
+  :format => :flv
+}
+
+optparser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($0)} [options] URL"
+
+  opts.on('-o','--output PATH','Path to download the video to') do |output|
+    options[:mode]   = :download
+    options[:output] = output
+  end
+
+  opts.on('-p','--play [COMMAND]','Play the video URL') do |player|
+    options[:mode]   = :play
+    options[:player] = player if player
+  end
+
+  opts.on('-f',"--format [#{FLV::Page::FORMATS.keys.join(', ')}]",'The video format') do |format|
+    options[:format] = format.to_sym
+  end
+
+  opts.on('-F', '--formats','Lists the available video formats') do
+    options[:mode] = :list
+    options[:list] = :formats
+  end
+
+  opts.on('-U', '--urls','Lists the available video URLs') do
+    options[:mode] = :list
+    options[:list] = :urls
+  end
+
+  opts.on('-D', '--dump','Dumps the flashvars') do
+    options[:mode] = :list
+    options[:list] = :flashvars
+  end
+end
+
+optparser.parse!
+
+video = FLV::Page.new(ARGV[0])
+
+if options[:list]
+  case options[:list]
+  when :formats
+    puts(*video.formats)
+  when :urls
+    video.video_urls.each do |format,url|
+      puts "#{format}: #{url}"
+    end
+  when :flashvars
+    pp video.flashvars
+  end
+else
+  unless video.flashvars
+    $stderr.puts "Could not extract flashvars from #{video.url}"
+    exit -1
+  end
+
+  unless video.formats.include?(options[:format])
+    $stderr.puts "Unknown format: #{options[:format]}"
+    exit -1
+  end
+
+  video_url = video.video_urls[options[:format]]
+
+  case options[:mode]
+  when :play
+    unless options[:player]
+      $stderr.puts "Must specify the video player via --play or $VIDEO_PLAYER"
+      exit -1
+    end
+
+    system(options[:player],video_url)
+  when :download
+    unless options[:output]
+      $stderr.puts "Must specify --output PATH"
+      exit -1
+    end
+
+    puts ">>> Requesting #{video_url} ..."
+
+    http = Net::HTTP.new(video_url.host,video_url.port)
+
+    if video_url.scheme == 'https'
+      require 'net/https'
+
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+
+    request = Net::HTTP::Get.new(video_url.request_uri)
+    request['Referer']    = video_url
+    request['User-Agent'] = 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)'
+
+    http.request(request) do |response|
+      size, total = 0, response.header['Content-Length'].to_i
+
+      video_path = options.fetch(:output)
+
+      puts ">>> Downloading to #{video_path.dump} ..."
+
+      File.open(video_path,"wb") do |file|
+        response.read_body do |chunk|
+          file.write(chunk)
+
+          size += chunk.size
+          printf "\r>>> [%d / %d] %d%% ...", size, total, ((size * 100) / total)
+        end
+      end
+
+      puts "\n>>> Download complete!"
+    end
+  end
+end
