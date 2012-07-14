@@ -11,11 +11,11 @@ Downloads or plays Flash Video (flv) file directly from their web-page.
 
 ## Why?
 
-Because **fuck flash**.
+Because **fuck flash**, that's why.
 
 ## Features
 
-* Extracts `flashvars` from.
+* Extracts `flashvars` from:
   * `param` tags.
   * `embed` / `object` tags.
   * JavaScript
