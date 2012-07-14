@@ -30,7 +30,7 @@ Because **fuck flash**, that's why.
 
 Downloads a video:
 
-    flv-dl "URL"
+    flv-dl -o video.flv "URL"
 
 Plays a video:
 
