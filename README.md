@@ -46,6 +46,7 @@ Dumps the collected `flashvars`:
 
 ## Requirements
 
+* [uri-query_params](https://github.com/postmodern/uri-query_params) ~> 0.6
 * [nokogiri](https://github.com/tenderlove/nokogiri) ~> 1.4
 
 ## Install
