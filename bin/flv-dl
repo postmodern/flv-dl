@@ -25,7 +25,7 @@ optparser = OptionParser.new do |opts|
     options[:player] = player if player
   end
 
-  opts.on('-f',"--format [#{FLV::Page::FORMATS.keys.join(', ')}]",'The video format') do |format|
+  opts.on('-f',"--format [#{FLV::Video::FORMATS.keys.join(', ')}]",'The video format') do |format|
     options[:format] = format.to_sym
   end
 
@@ -47,7 +47,7 @@ end
 
 optparser.parse!
 
-video = FLV::Page.new(ARGV[0])
+video = FLV::Video.new(ARGV[0])
 
 if options[:list]
   case options[:list]
