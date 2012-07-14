@@ -7,7 +7,7 @@
 
 ## Description
 
-Downloads or plays Flash Video (flv) file directly from their web-page.
+Downloads or plays Flash Video (`.flv`) file directly from their web-page.
 
 ## Why?
 
@@ -19,6 +19,12 @@ Because **fuck flash**, that's why.
   * `param` tags.
   * `embed` / `object` tags.
   * JavaScript
+
+## TODO
+
+* Support extracting Video URLs from XML/JSON config files.
+* Add specs for {FLV::Video} against major Flash Video websites
+  (yes, even the sketchy porn sites.)
 
 ## Synopsis
 
