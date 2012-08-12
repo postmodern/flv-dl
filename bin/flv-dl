@@ -7,7 +7,7 @@ require 'pp'
 require 'flv/video'
 
 options = {
-  :mode   => :play,
+  :mode   => :download,
   :player => ENV['VIDEO_PLAYER'],
   :format => :flv
 }
@@ -82,11 +82,6 @@ else
 
     system(options[:player],video_url)
   when :download
-    unless options[:output]
-      $stderr.puts "Must specify --output PATH"
-      exit -1
-    end
-
     puts ">>> Requesting #{video_url} ..."
 
     http = Net::HTTP.new(video_url.host,video_url.port)
@@ -105,7 +100,9 @@ else
     http.request(request) do |response|
       size, total = 0, response.header['Content-Length'].to_i
 
-      video_path = options.fetch(:output)
+      video_path = options.fetch(:output) do
+        "#{video.title}.#{options[:format]}"
+      end
 
       puts ">>> Downloading to #{video_path.dump} ..."
 
