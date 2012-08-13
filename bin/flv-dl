@@ -79,7 +79,7 @@ else
   case options[:mode]
   when :play
     unless options[:player]
-      $stderr.puts "Must specify the video player via --play or $VIDEO_PLAYER"
+      $stderr.puts "Must specify the video player via --player or $VIDEO_PLAYER"
       exit -1
     end
 
