@@ -20,9 +20,12 @@ optparser = OptionParser.new do |opts|
     options[:output] = output
   end
 
-  opts.on('-p','--play [COMMAND]','Play the video URL') do |player|
-    options[:mode]   = :play
-    options[:player] = player if player
+  opts.on('-p','--play','Play the video URL') do
+    options[:mode] = :play
+  end
+
+  opts.on('-P','--player COMMAND','Video player command') do |player|
+    options[:player] = player
   end
 
   opts.on('-f',"--format [#{FLV::Video::FORMATS.keys.join(', ')}]",'The video format') do |format|
