@@ -20,13 +20,8 @@ module FLV
       @doc = Nokogiri::HTML(open(@url))
     end
 
-    TITLE_XPATHS = [
-      "//meta[@name='description']/@content",
-      "//title"
-    ]
-
     def title
-      @title ||= @doc.at(TITLE_XPATHS.join('|')).inner_text
+      @title ||= @doc.at('//title').inner_text
     end
 
     def flashvars
