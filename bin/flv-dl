@@ -83,7 +83,7 @@ else
       exit -1
     end
 
-    system(options[:player],video_url)
+    system(options[:player],video_url.to_s)
   when :download
     puts ">>> Requesting #{video_url} ..."
 
