@@ -30,11 +30,13 @@ Because **fuck flash**, that's why.
 
 Downloads a video:
 
+    flv-dl "URL"
     flv-dl -o video.flv "URL"
 
 Plays a video:
 
-    flv-dl -p totem "URL"
+    export VIDEO_PLAYER=mplayer
+    flv-dl -p "URL"
 
 List available formats / URLs:
 
